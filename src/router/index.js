@@ -13,63 +13,11 @@ import { useUserStore } from '../store/user'
 
 //路由表
 const routes = [
-<<<<<<< HEAD
-    {
-        path: '/',//访问路径 http://127.0.0.1:5173/cx/XfDGdOkjVo7deIxQjurcf8BEnNf 
-        name: 'home', //命名路由
-        component: Index,   //key:value  默认//页面组件 components 普通组件 页面组件和普通组件是一对多
-    },
-    {
-        path: '/adcate',
-        name: 'adCate',
-        component: () => import('../views/static/adCate.vue')// 懒加载
-    },
-    {
-        path: '/cms-help-category',
-        name: 'cms-help-category',
-        component: () => import('../views/admin/cms-help-category.vue')// 懒加载
-    },
-    {
-        path: '/login',
-        name: 'login',
-        component: () => import('../views/static/login.vue')// 懒加载
-    },
-    {
-        path: '/admin',
-        name: 'admin',
-        component: LayoutAdmin,
-        children: [
-            {
-                path: '',
-                name: 'admin-index',
-                component: () => import('@/views/admin/index.vue')
-            },
-            {
-                path: 'info',
-                name: 'admin-info',
-                component: () => import('@/views/admin/info.vue')
-            },
-            {
-                path: 'logout',
-                name: 'admin-logout',
-                component: () => import('@/views/admin/logout.vue')
-            }, {
-                path: 'changepassword',
-                name: 'admin-changepassword',
-                component: () => import('@/views/admin/changepassword.vue')
-            },
-            {
-                path: 'forgetpassword',
-                name: 'admin-forgetpassword',
-                component: () => import('@/views/admin/forgetpassword.vue')
-            }
-=======
   {
     path: '/', //访问路径 http://127.0.0.1:5173/cx/XfDGdOkjVo7deIxQjurcf8BEnNf
     name: 'home', //命名路由
     component: Index, //key:value  默认//页面组件 components 普通组件 页面组件和普通组件是一对多
   },  
->>>>>>> cc2891e8a33d997e23b663f6045d4b5980d49baa
 
   {
     path: '/cms_log', //访问路径 http://127.0.0.1:5173/cx/XfDGdOkjVo7deIxQjurcf8BEnNf
@@ -77,6 +25,11 @@ const routes = [
     component: () => import('@/views/admin/cms_log.vue'),
   },
 
+  {
+    path: '/cms-help-category',
+    name: 'cms-help-category',
+    component: () => import('../views/admin/cms-help-category.vue')// 懒加载
+},
   {
     path: '/adcate',
     name: 'adCate',

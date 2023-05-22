@@ -26,7 +26,7 @@ const categoryPage=(data)=>{
 }
 const categoryDelId=(params)=>{
     return instance.request({
-        url:'/mall/cms-help-category/del/{id}',
+        url:'/mall/cms-help-category/del/' + params.id,
         params
     })
 }

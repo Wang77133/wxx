@@ -9,8 +9,8 @@
     -->
 
 
-    <div class="help-category">
-        <div class="help-category-tools">
+    <div class="category">
+        <div class="category">
             <el-button type="warning" @click="toAdd">添加</el-button>
         </div>
         <el-table :data="categorys" style="width: 100%">
@@ -18,8 +18,6 @@
             <el-table-column prop="name" label="名称" width="120" />
             <el-table-column prop="icon" label="图标分类" width="120" />
             <el-table-column prop="helpcount" label="专题数量" width="120" />
-            <el-table-column prop="showstatus" label="展示" width="120" />
-            <el-table-column prop="sort" label="排列" width="120" />
 
             <el-table-column fixed="right" label="操作" width="120">
                 <template #default="scope">
@@ -43,12 +41,6 @@
             </el-form-item>
             <el-form-item label="专题数量" :label-width="formLabelWidth">
                 <el-input v-model="category.helpCount" autocomplete="off" />
-            </el-form-item>
-            <el-form-item label="展示" :label-width="formLabelWidth">
-                <el-input v-model="category.showStatus" autocomplete="off" />
-            </el-form-item>
-            <el-form-item label="排列" :label-width="formLabelWidth">
-                <el-input v-model="category.sort" autocomplete="off" />
             </el-form-item>
         </el-form>
         <template #footer>
@@ -105,7 +97,7 @@ export default defineComponent({
             categoryPage(data).then(res => {
                 console.log(res);
                 const page = res.data.page;
-                this.category = page.records;
+                this.categorys = res.data.page.records;
                 this.page = page;
             }).catch(err => {
                 console.log(err);
@@ -114,8 +106,16 @@ export default defineComponent({
         },
         currentchange(current) {
             // console.log(current);
+            this.category = {
+                "helpCount": 0,
+                "icon": "",
+                "id": 0,
+                "name": "",
+            },
             this.getcategoryPage(current);
             this.page.current = current;//数据更新目前显示的页面
+            
+
         },
         del(id) {
             //删除数据
@@ -144,6 +144,12 @@ export default defineComponent({
         },
         toAdd() {
             //到添加的页面
+            this.category= {
+                "helpCount": 0,
+                "icon": "",
+                "id": 0,
+                "name": "",
+            },
             this.dialogFormVisible = true;
         },
         save() {
