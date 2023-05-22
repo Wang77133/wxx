@@ -13,6 +13,7 @@ import { useUserStore } from '../store/user'
 
 //路由表
 const routes = [
+
   {
     path: '/', //访问路径 http://127.0.0.1:5173/cx/XfDGdOkjVo7deIxQjurcf8BEnNf
     name: 'home', //命名路由
@@ -29,6 +30,11 @@ const routes = [
     path: '/cms-help-category',
     name: 'cms-help-category',
     component: () => import('../views/admin/cms-help-category.vue')// 懒加载
+},
+{
+  path: '/cms-topic',
+  name: 'cms-topic',
+  component: () => import('@/views/admin/cms-topic.vue'), // 懒加载
 },
   {
     path: '/adcate',
