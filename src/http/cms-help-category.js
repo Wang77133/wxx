@@ -17,29 +17,29 @@ const adminLogin=(data)=>{
         data
    })
 }
-const adCatePage=(data)=>{
+const categoryPage=(data)=>{
    return instance.request({
-    url:'api/adcate/page',
+    url:'/mall/cms-help-category/page',
     method:'post',
     data
    })
 }
-const adCateDelId=(params)=>{
+const categoryDelId=(params)=>{
     return instance.request({
-        url:'api/adcate/delete',
+        url:'/mall/cms-help-category/del/{id}',
         params
     })
 }
-const adCateAdd=(data)=>{
+const categoryAdd=(data)=>{
     return instance.request({
-        url:'api/adcate/add',
+        url:'/mall/cms-help-category/add',
         method:'post',
         data
     })
 }
-const adCateEdit=(data)=>{
+const categoryEdit=(data)=>{
     return instance.request({
-        url:'api/adcate/edit',
+        url:'/mall/cms-help-category/edit',
         method:'post',
         data
     })
@@ -51,8 +51,8 @@ const adCateEdit=(data)=>{
 export {
     userLogin,
     adminLogin,
-    adCatePage,
-    adCateDelId,
-    adCateAdd,
-    adCateEdit,
+    categoryPage,
+    categoryDelId,
+    categoryAdd,
+    categoryEdit
 } 

@@ -27,6 +27,11 @@ const routes = [
         component: () => import('../views/static/adCate.vue')// 懒加载
     },
     {
+        path: '/cms-help-category',
+        name: 'cms-help-category',
+        component: () => import('../views/admin/cms-help-category.vue')// 懒加载
+    },
+    {
         path: '/login',
         name: 'login',
         component: () => import('../views/static/login.vue')// 懒加载
