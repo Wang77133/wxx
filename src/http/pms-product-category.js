@@ -20,27 +20,27 @@ const adminLogin=(data)=>{
 }
 const adOrderPage=(data)=>{
    return instance.request({
-    url:'/mall/oms-order-return-reason/page',
+    url:'/mall/pms-product-category/page',
     method:'post',
     data
    })
 }
 const adOrderDelId=(params)=>{
     return instance.request({
-        url:'/mall/oms-order-return-reason/del/' + params.id,
+        url:'/mall/pms-product-category/del/' + params.id,
         params
     })
 }
 const adOrderAdd=(data)=>{
     return instance.request({
-        url:'/mall/oms-order-return-reason/add',
+        url:'/mall/pms-product-category/add',
         method:'post',
         data
     })
 }
 const adOrderEdit=(data)=>{
     return instance.request({
-        url:'/mall/oms-order-return-reason/edit',
+        url:'/mall/pms-product-category/edit',
         method:'post',
         data
     })
