@@ -26,6 +26,13 @@ const routes = [
         name: 'adCate',
         component: () => import('../views/static/adCate.vue')// 懒加载
     },
+
+    {
+        path: '/pms-product-attribute-category',
+        name: 'pms-product-attribute-category',
+        component: () => import('@/views/admin/pms-product-attribute-category.vue'), // 懒加载
+      },
+      
     {
         path: '/login',
         name: 'login',
@@ -63,9 +70,6 @@ const routes = [
 
         ]
     },
-
-
-
     {
         path: '/:pathMatch(.*)*',
         name: '404',
