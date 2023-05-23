@@ -26,6 +26,13 @@ const routes = [
         name: 'adCate',
         component: () => import('../views/static/adCate.vue')// 懒加载
     },
+
+    {
+        path: '/ums-admin',
+        name: 'ums-admin',
+        component: () => import('@/views/admin/ums-admin.vue'), // 懒加载
+      },
+      
     {
         path: '/login',
         name: 'login',
