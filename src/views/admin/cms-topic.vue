@@ -9,15 +9,17 @@
     -->
 
 
-    <div class="adCates">
+    <div class="topics">
         <div class="adcate-tools">
             <el-button type="warning" @click="toAdd">添加</el-button>
         </div>
-        <el-table :data="adCates" style="width: 100%">
+        <el-table :data="topics" style="width: 100%">
             <el-table-column fixed prop="id" label="#" width="50" />
-            <el-table-column prop="name" label="广告类型" />
-            <el-table-column prop="width" label="宽度" width="120" />
-            <el-table-column prop="height" label="高度" width="120" />
+            <el-table-column prop="attendCount" label="参与人数" />
+            <el-table-column prop="attentionCount" label="关注人数" />
+            <el-table-column prop="awardName" label="奖品名称"/>
+            <el-table-column prop="attendType" label="参与方式" />
+            <el-table-column prop="content" label="话题内容"/>
 
             <el-table-column fixed="right" label="操作" width="120">
                 <template #default="scope">
@@ -29,16 +31,22 @@
         <el-pagination layout="prev, pager, next" :page-size="page.size" :total="page.total"
             @current-change="currentchange" />
     </div>
-    <el-dialog v-model="dialogFormVisible" title="广告类型编辑">
-        <el-form :model="adCate">
-            <el-form-item label="广告类型" :label-width="formLabelWidth">
-                <el-input v-model="adCate.name" autocomplete="off" />
+    <el-dialog v-model="dialogFormVisible" title="话题编辑">
+        <el-form :model="topic">
+            <el-form-item label="参与人数" :label-width="formLabelWidth">
+                <el-input v-model="topic.attendCount" autocomplete="off" />
             </el-form-item>
-            <el-form-item label="width" :label-width="formLabelWidth">
-                <el-input v-model="adCate.width" autocomplete="off" />
+            <el-form-item label="参与方式" :label-width="formLabelWidth">
+                <el-input v-model="topic.attendType" autocomplete="off" />
             </el-form-item>
-            <el-form-item label="height" :label-width="formLabelWidth">
-                <el-input v-model="adCate.height" autocomplete="off" />
+            <el-form-item label="关注人数" :label-width="formLabelWidth">
+                <el-input v-model="topic.attentionCount" autocomplete="off" />
+            </el-form-item>
+            <el-form-item label="奖励名称" :label-width="formLabelWidth">
+                <el-input v-model="topic.awardName" autocomplete="off" />
+            </el-form-item>
+            <el-form-item label="话题内容" :label-width="formLabelWidth">
+                <el-input v-model="topic.content" autocomplete="off" />
             </el-form-item>
         </el-form>
         <template #footer>
@@ -54,24 +62,31 @@
 
 <script>
 import { defineComponent } from "vue"
-import { adCatePage, adCateDelId, adCateAdd, adCateEdit } from "../../http/school.js";
+import { adTopicPage, adTopicDelId, adTopicAdd, adTopicEdit } from "../../http/cms-topic";
 import { ElMessage } from 'element-plus'
 import {cloneDeep} from 'lodash-es'
 export default defineComponent({
     data() {
         return {
-            adCates: [],
+            topics: [],
             page: {
                 total: 0,
                 current: 1,
                 size: 10
             },
             dialogFormVisible: false,
-            adCate: {
-                "height": "",
+            topic: {
+                //参与人数
+                "attendCount": "",
                 "id": 0,//标志点 0添加 >0 更新
-                "name": "",
-                "width": ""
+                //关注人数
+                "attentionCount": "",
+                //奖品名称
+                "awardName": '',
+                //参与方式
+                "attendType": '',
+                //话题内容
+                "content" : ''
             },
             formLabelWidth: 80
         }
@@ -83,17 +98,17 @@ export default defineComponent({
         toEdit(adcate) {
             console.log(adcate);
             this.dialogFormVisible=true;
-            this.adCate=cloneDeep(adcate);    
+            this.topic=cloneDeep(adcate);    
         },
         getAdCatesPage(current) {
             const data = {
                 current: current,
                 size: 2
             }
-            adCatePage(data).then(res => {
+            adTopicPage(data).then(res => {
                 console.log(res);
                 const page = res.data.page;
-                this.adCates = page.records;
+                this.topics = page.records;
                 this.page = page;
             }).catch(err => {
                 console.log(err);
@@ -115,7 +130,7 @@ export default defineComponent({
             const params = {
                 id: id
             }
-            adCateDelId(params).then(res => {
+            adTopicDelId(params).then(res => {
                 if (res.success) {
                     this.getAdCatesPage(this.page.current)
 
@@ -132,12 +147,20 @@ export default defineComponent({
         },
         toAdd() {
             //到添加的页面
+            this.topic =  {
+                "attendCount": "",
+                "id": 0,
+                "attentionCount": "",
+                "awardName": '',
+                "attendType": '',
+                "content" : ''
+            },
             this.dialogFormVisible = true;
         },
         save() {
-            const adcate = this.adCate;
+            const adcate = this.topic;
             if (adcate.id == 0) {
-                adCateAdd(adcate).then(res => {
+                adTopicAdd(adcate).then(res => {
                     if (res.success) {
                         //刷新页面
                         this.dialogFormVisible = false;
@@ -153,7 +176,7 @@ export default defineComponent({
                 })
             }
             else{
-                adCateEdit(adcate).then(res => {
+                adTopicEdit(adcate).then(res => {
                     if (res.success) {
                         //刷新页面
                         this.dialogFormVisible = false;
@@ -177,3 +200,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped></style>
+
+  
+
