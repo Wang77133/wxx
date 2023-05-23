@@ -18,7 +18,7 @@ const routes = [
     path: '/', //访问路径 http://127.0.0.1:5173/cx/XfDGdOkjVo7deIxQjurcf8BEnNf
     name: 'home', //命名路由
     component: Index, //key:value  默认//页面组件 components 普通组件 页面组件和普通组件是一对多
-  },  
+  },
 
   {
     path: '/cms_log', //访问路径 http://127.0.0.1:5173/cx/XfDGdOkjVo7deIxQjurcf8BEnNf
@@ -27,15 +27,20 @@ const routes = [
   },
 
   {
+    path: '/ums-member-receive-address',
+    name: 'ums-member-receive-address',
+    component: () => import('../views/admin/ums-member-receive-address.vue')// 懒加载
+  },
+  {
     path: '/cms-help-category',
     name: 'cms-help-category',
     component: () => import('../views/admin/cms-help-category.vue')// 懒加载
-},
-{
-  path: '/cms-topic',
-  name: 'cms-topic',
-  component: () => import('@/views/admin/cms-topic.vue'), // 懒加载
-},
+  },
+  {
+    path: '/cms-topic',
+    name: 'cms-topic',
+    component: () => import('@/views/admin/cms-topic.vue'), // 懒加载
+  },
   {
     path: '/adcate',
     name: 'adCate',
@@ -46,17 +51,17 @@ const routes = [
     name: 'sms-flash-promotion',
     component: () => import('@/views/admin/sms-flash-promotion.vue'), // 懒加载
   },
-    {
-        path: '/cms-topic',
-        name: 'cms-topic',
-        component: () => import('@/views/admin/cms-topic.vue'), // 懒加载
-      },
-      {
-        path: '/pms-product-category',
-        name: 'pms-product-category',
-        component: () => import('@/views/admin/pms-product-category.vue'), // 懒加载
-      },
-      
+  {
+    path: '/cms-topic',
+    name: 'cms-topic',
+    component: () => import('@/views/admin/cms-topic.vue'), // 懒加载
+  },
+  {
+    path: '/pms-product-category',
+    name: 'pms-product-category',
+    component: () => import('@/views/admin/pms-product-category.vue'), // 懒加载
+  },
+
   {
     path: '/login',
     name: 'login',
