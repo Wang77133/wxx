@@ -31,6 +31,11 @@ const routes = [
     component: () => import('@/views/static/adCate.vue'), // 懒加载
   },
   {
+    path: '/ums_rule',
+    name: 'ums_rule',
+    component: () => import('@/views/admin/ums_rule.vue'), // 懒加载
+  },
+  {
     path: '/login',
     name: 'login',
     component: () => import('@/views/static/login.vue'), // 懒加载
@@ -82,21 +87,21 @@ const router = createRouter({
 })
 //前置路由守卫
 //用户状态 user.js
-router.beforeEach((to, from, next) => {
-  const userStore = useUserStore()
+// router.beforeEach((to, from, next) => {
+//   const userStore = useUserStore()
 
-  if (whiteList.includes(to.path)) {
-    // 在白名单中的路径可以无需验证直接访问
-    next()
-  } else {
-    if (userStore.token && userStore.token.length > 0) {
-      // 用户已经登录，允许访问请求的路径
-      next()
-    } else {
-      // 用户未登录，重定向到登录页面
-      next({ name: 'login' })
-    }
-  }
-})
+//   if (whiteList.includes(to.path)) {
+//     // 在白名单中的路径可以无需验证直接访问
+//     next()
+//   } else {
+//     if (userStore.token && userStore.token.length > 0) {
+//       // 用户已经登录，允许访问请求的路径
+//       next()
+//     } else {
+//       // 用户未登录，重定向到登录页面
+//       next({ name: 'login' })
+//     }
+//   }
+// })
 
 export default router
