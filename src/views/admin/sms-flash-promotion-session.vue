@@ -15,9 +15,10 @@
         </div>
         <el-table :data="adCates" style="width: 100%">
             <el-table-column fixed prop="id" label="#" width="50" />
-            <el-table-column prop="name" label="广告类型" />
-            <el-table-column prop="width" label="宽度" width="120" />
-            <el-table-column prop="height" label="高度" width="120" />
+            <el-table-column prop="memberPhone" label="会员手机" />
+            <el-table-column prop="productName" label="项目名称"/>
+            <el-table-column prop="sendTime" label="发送时间" />
+            <el-table-column prop="subscribeTime" label="会员订阅时间" />
 
             <el-table-column fixed="right" label="操作" width="120">
                 <template #default="scope">
@@ -29,16 +30,29 @@
         <el-pagination layout="prev, pager, next" :page-size="page.size" :total="page.total"
             @current-change="currentchange" />
     </div>
-    <el-dialog v-model="dialogFormVisible" title="广告类型编辑">
+    <el-dialog v-model="dialogFormVisible" title="会员任务编辑">
         <el-form :model="adCate">
-            <el-form-item label="广告类型" :label-width="formLabelWidth">
-                <el-input v-model="adCate.name" autocomplete="off" />
+            <el-form-item label="会员手机" :label-width="formLabelWidth">
+                <el-input v-model="adCate.memberPhone" autocomplete="off" />
             </el-form-item>
-            <el-form-item label="width" :label-width="formLabelWidth">
-                <el-input v-model="adCate.width" autocomplete="off" />
+            <el-form-item label="项目名称" :label-width="formLabelWidth">
+                <el-input v-model="adCate.productName" autocomplete="off" />
             </el-form-item>
-            <el-form-item label="height" :label-width="formLabelWidth">
-                <el-input v-model="adCate.height" autocomplete="off" />
+            <el-form-item label="发送时间" :label-width="formLabelWidth">
+                <el-date-picker
+                    v-model="adCate.sendTime"
+                    type="date"
+                    placeholder="Pick a day"
+                    :size="size"
+                />
+            </el-form-item>
+            <el-form-item label="会员订阅时间" :label-width="formLabelWidth">
+                <el-date-picker
+                    v-model="adCate.subscribeTime"
+                    type="date"
+                    placeholder="Pick a day"
+                    :size="size"
+                />
             </el-form-item>
         </el-form>
         <template #footer>
@@ -54,7 +68,7 @@
 
 <script>
 import { defineComponent } from "vue"
-import { adCatePage, adCateDelId, adCateAdd, adCateEdit } from "../../http/school.js";
+import { adSessionPage, adSessionDelId, adSessionAdd, adSessionEdit } from "../../http/sms-flash-promotion-session";
 import { ElMessage } from 'element-plus'
 import {cloneDeep} from 'lodash-es'
 export default defineComponent({
@@ -68,10 +82,13 @@ export default defineComponent({
             },
             dialogFormVisible: false,
             adCate: {
-                "height": "",
-                "id": 0,//标志点 0添加 >0 更新
-                "name": "",
-                "width": ""
+                "id": 0,
+                "memberId": 0,
+                "memberPhone": "",
+                "productId": 0,
+                "productName": "",
+                "sendTime": "",
+                "subscribeTime": ""
             },
             formLabelWidth: 80
         }
@@ -90,7 +107,7 @@ export default defineComponent({
                 current: current,
                 size: 2
             }
-            adCatePage(data).then(res => {
+            adSessionPage(data).then(res => {
                 console.log(res);
                 const page = res.data.page;
                 this.adCates = page.records;
@@ -115,7 +132,7 @@ export default defineComponent({
             const params = {
                 id: id
             }
-            adCateDelId(params).then(res => {
+            adSessionDelId(params).then(res => {
                 if (res.success) {
                     this.getAdCatesPage(this.page.current)
 
@@ -132,12 +149,21 @@ export default defineComponent({
         },
         toAdd() {
             //到添加的页面
+            this.adCate =  {
+                "id": 0,
+                "memberId": 0,
+                "memberPhone": "",
+                "productId": 0,
+                "productName": "",
+                "sendTime": "",
+                "subscribeTime": ""
+            },
             this.dialogFormVisible = true;
         },
         save() {
             const adcate = this.adCate;
             if (adcate.id == 0) {
-                adCateAdd(adcate).then(res => {
+                adSessionAdd(adcate).then(res => {
                     if (res.success) {
                         //刷新页面
                         this.dialogFormVisible = false;
@@ -153,7 +179,7 @@ export default defineComponent({
                 })
             }
             else{
-                adCateEdit(adcate).then(res => {
+                adSessionEdit(adcate).then(res => {
                     if (res.success) {
                         //刷新页面
                         this.dialogFormVisible = false;
@@ -177,3 +203,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped></style>
+
+  
+

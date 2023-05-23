@@ -11,13 +11,19 @@
 
     <div class="adCates">
         <div class="adcate-tools">
-            <el-button type="warning" @click="toAdd">添加</el-button>
+            <el-button type="warning" color="#006699" @click="toAdd">添加</el-button>
+            <el-button type="warning" @click="selectById">按ID查询</el-button>
         </div>
         <el-table :data="adCates" style="width: 100%">
-            <el-table-column fixed prop="id" label="#" width="50" />
-            <el-table-column prop="name" label="广告类型" />
-            <el-table-column prop="width" label="宽度" width="120" />
-            <el-table-column prop="height" label="高度" width="120" />
+            <el-table-column fixed prop="id" label="id" width="50" />
+            <el-table-column prop="username" label="username" />
+            <el-table-column prop="password" label="password" /> 
+            <el-table-column prop="createTime" label="创建时间" />
+            <el-table-column prop="email" label="邮箱" />
+            <el-table-column prop="loginTime" label="最后登录时间"/>
+            <el-table-column prop="nickName" label="昵称" />
+            <el-table-column prop="note" label="备注信息"/>
+            <el-table-column :prop="status==1?'启用':'禁用'" label="帐号启用状态"/>
 
             <el-table-column fixed="right" label="操作" width="120">
                 <template #default="scope">
@@ -26,19 +32,31 @@
                 </template>
             </el-table-column>
         </el-table>
-        <el-pagination layout="prev, pager, next" :page-size="page.size" :total="page.total"
+            <el-pagination background layout="prev, pager, next" :page-size="page.size" :total="page.total"
             @current-change="currentchange" />
     </div>
-    <el-dialog v-model="dialogFormVisible" title="广告类型编辑">
+    <el-dialog v-model="dialogFormVisible" title="后台用户编辑">
         <el-form :model="adCate">
-            <el-form-item label="广告类型" :label-width="formLabelWidth">
-                <el-input v-model="adCate.name" autocomplete="off" />
+            <el-form-item label="username" :label-width="formLabelWidth">
+                <el-input v-model="adCate.username" autocomplete="off" />
+            </el-form-item> 
+            <el-form-item label="password" :label-width="formLabelWidth">
+                <el-input v-model="adCate.password" autocomplete="off" />
+            </el-form-item>                                  
+            <el-form-item label="邮箱" :label-width="formLabelWidth">
+                <el-input v-model="adCate.email" autocomplete="off" />
             </el-form-item>
-            <el-form-item label="width" :label-width="formLabelWidth">
-                <el-input v-model="adCate.width" autocomplete="off" />
+            <el-form-item label="昵称" :label-width="formLabelWidth">
+                <el-input v-model="adCate.nickName" autocomplete="off" />
             </el-form-item>
-            <el-form-item label="height" :label-width="formLabelWidth">
-                <el-input v-model="adCate.height" autocomplete="off" />
+            <el-form-item label="备注信息" :label-width="formLabelWidth">
+                <el-input v-model="adCate.note" autocomplete="off" />
+            </el-form-item>
+            <el-form-item label="状态" :label-width="formLabelWidth">
+                <el-select v-model="adCate.status" placeholder="please select your zone">
+                    <el-option label="启用" value="1" />
+                    <el-option label="禁用" value="0" />
+                </el-select>
             </el-form-item>
         </el-form>
         <template #footer>
@@ -50,16 +68,37 @@
             </span>
         </template>
     </el-dialog>
+
+    <!-- 按id查询按钮点击后出现的表单 -->
+    <el-dialog v-model="dialogFormVisibleById" title="查询">
+        <el-form :model="adCate">
+            <el-form-item label="请输入ID" :label-width="formLabelWidth">
+                <el-input v-model="searchText" placeholder="按ID查询，请输入ID" autocomplete="off" />
+            </el-form-item>
+        </el-form>
+
+        <template #footer>
+            <span class="dialog-footer">
+                <el-button @click="dialogFormVisibleById = false">Cancel</el-button>
+                <el-button type="primary" @click="getById(searchText)">查询
+                </el-button>
+            </span>
+        </template>
+    </el-dialog>
+
+
 </template>
 
 <script>
 import { defineComponent } from "vue"
-import { adCatePage, adCateDelId, adCateAdd, adCateEdit } from "../../http/school.js";
+import { adAdminPage, adAdminDelId, adAdminAdd, adAdminEdit ,couponOne} from "../../http/ums-admin";
 import { ElMessage } from 'element-plus'
 import {cloneDeep} from 'lodash-es'
 export default defineComponent({
     data() {
         return {
+            searchText: "",
+            coupons: [],
             adCates: [],
             page: {
                 total: 0,
@@ -67,11 +106,18 @@ export default defineComponent({
                 size: 10
             },
             dialogFormVisible: false,
+            dialogFormVisibleById : false,
             adCate: {
-                "height": "",
-                "id": 0,//标志点 0添加 >0 更新
-                "name": "",
-                "width": ""
+                "createTime": "",
+                "email": "",
+                "icon": "",
+                "id": 0,
+                "loginTime": "",
+                "nickName": "",
+                "note": "",
+                "password": "",
+                "status": 0,
+                "username": ""
             },
             formLabelWidth: 80
         }
@@ -90,7 +136,7 @@ export default defineComponent({
                 current: current,
                 size: 2
             }
-            adCatePage(data).then(res => {
+            adAdminPage(data).then(res => {
                 console.log(res);
                 const page = res.data.page;
                 this.adCates = page.records;
@@ -115,7 +161,7 @@ export default defineComponent({
             const params = {
                 id: id
             }
-            adCateDelId(params).then(res => {
+            adAdminDelId(params).then(res => {
                 if (res.success) {
                     this.getAdCatesPage(this.page.current)
 
@@ -132,12 +178,49 @@ export default defineComponent({
         },
         toAdd() {
             //到添加的页面
+            this.adCate =  {
+                "createTime": "",
+                "email": "",
+                "icon": "",
+                "id": 0,
+                "loginTime": "",
+                "nickName": "",
+                "note": "",
+                "password": "",
+                "status": 0,
+                "username": ""
+            },
             this.dialogFormVisible = true;
         },
+
+        selectById() {
+            this.dialogFormVisibleById = true;
+        },
+        // 按ID查询
+        getById(id) {
+            this.coupons = [];//新建一个数组
+            const params = {
+                id: id
+            }
+            couponOne(params).then(res => {
+                this.dialogFormVisibleById = false;
+                this.coupons.push(res.data.help);//在这个新数组里加入查到的信息
+                const adCates = this.coupons;//将新数组赋值
+                this.adCates = adCates;//显示
+                ElMessage("查询成功")
+            }).catch(err => {
+                ElMessage("查询失败")
+                console.log(err);
+            })
+        },
+
+
+
+
         save() {
             const adcate = this.adCate;
             if (adcate.id == 0) {
-                adCateAdd(adcate).then(res => {
+                adAdminAdd(adcate).then(res => {
                     if (res.success) {
                         //刷新页面
                         this.dialogFormVisible = false;
@@ -153,7 +236,7 @@ export default defineComponent({
                 })
             }
             else{
-                adCateEdit(adcate).then(res => {
+                adAdminEdit(adcate).then(res => {
                     if (res.success) {
                         //刷新页面
                         this.dialogFormVisible = false;
@@ -177,3 +260,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped></style>
+
+  
+
