@@ -1,25 +1,14 @@
 <template>
-    <!--
-         1 el-table显示数据,分页 
-         2  token cookie|session 服务端保存状态信息方式   
-         H5 token 如果有值 登录状态 否则就是登录
-         进入某个页面就要进行拦截：判断用户是否登录
-         通过什么方式：路由守卫
-         3 添加和更新
-    -->
-
-
     <div class="adCates">
         <div class="adcate-tools">
             <el-button type="warning" @click="toAdd">添加</el-button>
         </div>
         <el-table :data="adCates" style="width: 100%">
             <el-table-column fixed prop="id" label="#" width="50" />
-            <el-table-column prop="name" label="广告类型" />
-            <el-table-column prop="width" label="宽度" width="120" />
-            <el-table-column prop="height" label="高度" width="120" />
-
-            <el-table-column fixed="right" label="操作" width="120">
+            <el-table-column prop="name" label="退货类型" />
+            <el-table-column prop="createTime" label="添加时间" />
+            <el-table-column prop="status" :label="status==1?'禁用':'启用'" />
+            <el-table-column fixed="right" label="操作">
                 <template #default="scope">
                     <el-button link type="primary" size="small" @click="toEdit(scope.row)">更新</el-button>
                     <el-button link type="primary" size="small" @click="del(scope.row.id)">删除</el-button>
@@ -29,16 +18,16 @@
         <el-pagination layout="prev, pager, next" :page-size="page.size" :total="page.total"
             @current-change="currentchange" />
     </div>
-    <el-dialog v-model="dialogFormVisible" title="广告类型编辑">
+    <el-dialog v-model="dialogFormVisible" title="退货原因编辑">
         <el-form :model="adCate">
-            <el-form-item label="广告类型" :label-width="formLabelWidth">
+            <el-form-item label="退货类型" :label-width="formLabelWidth">
                 <el-input v-model="adCate.name" autocomplete="off" />
             </el-form-item>
-            <el-form-item label="width" :label-width="formLabelWidth">
-                <el-input v-model="adCate.width" autocomplete="off" />
-            </el-form-item>
-            <el-form-item label="height" :label-width="formLabelWidth">
-                <el-input v-model="adCate.height" autocomplete="off" />
+            <el-form-item label="状态" :label-width="formLabelWidth">
+                <el-select v-model="adCate.status" placeholder="please select your zone">
+                    <el-option label="启用" value="1" />
+                    <el-option label="禁用" value="0" />
+                </el-select>
             </el-form-item>
         </el-form>
         <template #footer>
@@ -54,7 +43,7 @@
 
 <script>
 import { defineComponent } from "vue"
-import { adCatePage, adCateDelId, adCateAdd, adCateEdit } from "../../http/school.js";
+import { adOrderPage, adOrderDelId, adOrderAdd, adOrderEdit } from "../../http/pms-product-category";
 import { ElMessage } from 'element-plus'
 import {cloneDeep} from 'lodash-es'
 export default defineComponent({
@@ -68,10 +57,11 @@ export default defineComponent({
             },
             dialogFormVisible: false,
             adCate: {
-                "height": "",
+                "createTime": "",
                 "id": 0,//标志点 0添加 >0 更新
                 "name": "",
-                "width": ""
+                "status": 0,
+                "sort": 0
             },
             formLabelWidth: 80
         }
@@ -90,7 +80,7 @@ export default defineComponent({
                 current: current,
                 size: 2
             }
-            adCatePage(data).then(res => {
+            adOrderPage(data).then(res => {
                 console.log(res);
                 const page = res.data.page;
                 this.adCates = page.records;
@@ -106,16 +96,11 @@ export default defineComponent({
             this.page.current = current;//数据更新目前显示的页面
         },
         del(id) {
-            //删除数据
-            //模拟删除，服务器进行处理 
-            //要别人反悔机会
-            // 如果只有一条数据，删除数据之后如何处理？
-            //人机交互
             console.log(id)
             const params = {
                 id: id
             }
-            adCateDelId(params).then(res => {
+            adOrderDelId(params).then(res => {
                 if (res.success) {
                     this.getAdCatesPage(this.page.current)
 
@@ -132,12 +117,19 @@ export default defineComponent({
         },
         toAdd() {
             //到添加的页面
+            this.adCate= {
+                "createTime": "",
+                "id": 0,//标志点 0添加 >0 更新
+                "name": "",
+                "status": 0
+            },
             this.dialogFormVisible = true;
         },
         save() {
             const adcate = this.adCate;
+            adcate.createTime = new Date()
             if (adcate.id == 0) {
-                adCateAdd(adcate).then(res => {
+                adOrderAdd(adcate).then(res => {
                     if (res.success) {
                         //刷新页面
                         this.dialogFormVisible = false;
@@ -153,7 +145,7 @@ export default defineComponent({
                 })
             }
             else{
-                adCateEdit(adcate).then(res => {
+                adOrderEdit(adcate).then(res => {
                     if (res.success) {
                         //刷新页面
                         this.dialogFormVisible = false;
@@ -177,3 +169,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped></style>
+
+  
+
