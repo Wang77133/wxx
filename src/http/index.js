@@ -18,11 +18,3 @@ api.interceptors.request.use(
   }
 )
 
-export {
-    userLogin,
-    adminLogin,
-    adCatePage,
-    adCateDelId,
-    adCateAdd,
-    adCateEdit,
-} 
