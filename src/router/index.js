@@ -10,7 +10,8 @@ import LayoutAdmin from '@/layout/admin/index.vue'
 //白名单
 const whiteList = [
     "/",
-    "/login"
+    "/login",
+    "/ums-member-task"
 ]
 import { useUserStore } from '../store/user'
 
@@ -26,6 +27,13 @@ const routes = [
         name: 'adCate',
         component: () => import('../views/static/adCate.vue')// 懒加载
     },
+
+    {
+        path: '/ums-member-task',
+        name: 'ums-member-task',
+        component: () => import('@/views/admin/ums-member-task.vue') // 懒加载
+      },
+      
     {
         path: '/login',
         name: 'login',
