@@ -26,6 +26,13 @@ const routes = [
         name: 'adCate',
         component: () => import('../views/static/adCate.vue')// 懒加载
     },
+
+    {
+        path: '/pms-product-category',
+        name: 'pms-product-category',
+        component: () => import('@/views/admin/pms-product-category.vue'), // 懒加载
+      },
+      
     {
         path: '/login',
         name: 'login',
