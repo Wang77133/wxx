@@ -9,15 +9,17 @@
     -->
 
 
-    <div class="adCates">
-        <div class="adcate-tools">
+    <div class="promotion">
+        <div class="promotion">
             <el-button type="warning" @click="toAdd">添加</el-button>
         </div>
-        <el-table :data="adCates" style="width: 100%">
-            <el-table-column fixed prop="id" label="#" width="50" />
-            <el-table-column prop="name" label="广告类型" />
-            <el-table-column prop="width" label="宽度" width="120" />
-            <el-table-column prop="height" label="高度" width="120" />
+        <el-table :data="promotions" style="width: 100%">
+            <el-table-column fixed prop="id" width="50" />
+            <el-table-column prop="createTime" label="创建时间" width="120" />
+            <el-table-column prop="endDate" label="结束日期" width="120" />
+            <el-table-column prop="startDate" label="开始日期" width="120" />
+            <el-table-column prop="status" label="上下线状态" width="120" />
+            <el-table-column prop="title" label="秒杀时间段名称" width="120" />
 
             <el-table-column fixed="right" label="操作" width="120">
                 <template #default="scope">
@@ -25,20 +27,28 @@
                     <el-button link type="primary" size="small" @click="del(scope.row.id)">删除</el-button>
                 </template>
             </el-table-column>
+
         </el-table>
+
         <el-pagination layout="prev, pager, next" :page-size="page.size" :total="page.total"
             @current-change="currentchange" />
     </div>
-    <el-dialog v-model="dialogFormVisible" title="广告类型编辑">
-        <el-form :model="adCate">
-            <el-form-item label="广告类型" :label-width="formLabelWidth">
-                <el-input v-model="adCate.name" autocomplete="off" />
+    <el-dialog v-model="dialogFormVisible" title="表单插入">
+        <el-form :model="promotion">
+            <el-form-item label="创建时间" :label-width="formLabelWidth">
+                <el-input v-model="promotion.createTime" autocomplete="off" />
             </el-form-item>
-            <el-form-item label="width" :label-width="formLabelWidth">
-                <el-input v-model="adCate.width" autocomplete="off" />
+            <el-form-item label="结束日期" :label-width="formLabelWidth">
+                <el-input v-model="promotion.endDate" autocomplete="off" />
             </el-form-item>
-            <el-form-item label="height" :label-width="formLabelWidth">
-                <el-input v-model="adCate.height" autocomplete="off" />
+            <el-form-item label="开始日期" :label-width="formLabelWidth">
+                <el-input v-model="promotion.startDate" autocomplete="off" />
+            </el-form-item>
+            <el-form-item label="上下线状态" :label-width="formLabelWidth">
+                <el-input v-model="promotion.status" autocomplete="off" />
+            </el-form-item>
+            <el-form-item label="秒杀时间段名称" :label-width="formLabelWidth">
+                <el-input v-model="promotion.title" autocomplete="off" />
             </el-form-item>
         </el-form>
         <template #footer>
@@ -54,46 +64,48 @@
 
 <script>
 import { defineComponent } from "vue"
-import { adCatePage, adCateDelId, adCateAdd, adCateEdit } from "../../http/school.js";
+import { promotionPage, promotionDelId, promotionAdd, promotionEdit } from "../../http/sms-flash-promotion";
 import { ElMessage } from 'element-plus'
-import {cloneDeep} from 'lodash-es'
+import { cloneDeep } from 'lodash-es'
 export default defineComponent({
     data() {
         return {
-            adCates: [],
+            promotions: [],
             page: {
                 total: 0,
                 current: 1,
                 size: 10
             },
             dialogFormVisible: false,
-            adCate: {
-                "height": "",
-                "id": 0,//标志点 0添加 >0 更新
-                "name": "",
-                "width": ""
+            promotion: {
+                "createTime": "",
+                "endDate": "",
+                "id": 0,
+                "startDate": "",
+                "status": 0,
+                "title": ""
             },
             formLabelWidth: 80
         }
     },
     mounted() {
-        this.getAdCatesPage(1)
+        this.getpromotionPage(1)
     },
     methods: {
-        toEdit(adcate) {
-            console.log(adcate);
-            this.dialogFormVisible=true;
-            this.adCate=cloneDeep(adcate);    
+        toEdit(category) {
+            console.log(category);
+            this.dialogFormVisible = true;
+            this.category = cloneDeep(category);
         },
-        getAdCatesPage(current) {
+        getpromotionPage(current) {
             const data = {
                 current: current,
                 size: 2
             }
-            adCatePage(data).then(res => {
+            promotionPage(data).then(res => {
                 console.log(res);
                 const page = res.data.page;
-                this.adCates = page.records;
+                this.promotions = res.data.page.records;
                 this.page = page;
             }).catch(err => {
                 console.log(err);
@@ -102,8 +114,18 @@ export default defineComponent({
         },
         currentchange(current) {
             // console.log(current);
-            this.getAdCatesPage(current);
+            this.promotion = {
+                "createTime": "",
+                "endDate": "",
+                "id": 0,
+                "startDate": "",
+                "status": 0,
+                "title": ""
+            },
+            this.getpromotionPage(current);
             this.page.current = current;//数据更新目前显示的页面
+
+
         },
         del(id) {
             //删除数据
@@ -115,9 +137,9 @@ export default defineComponent({
             const params = {
                 id: id
             }
-            adCateDelId(params).then(res => {
+            promotionDelId(params).then(res => {
                 if (res.success) {
-                    this.getAdCatesPage(this.page.current)
+                    this.getpromotionPage(this.page.current)
 
                 }
                 else {
@@ -132,16 +154,24 @@ export default defineComponent({
         },
         toAdd() {
             //到添加的页面
-            this.dialogFormVisible = true;
+            this.promotion= {
+                "createTime": "",
+                "endDate": "",
+                "id": 0,
+                "startDate": "",
+                "status": 0,
+                "title": ""
+            },
+                this.dialogFormVisible = true;
         },
         save() {
-            const adcate = this.adCate;
-            if (adcate.id == 0) {
-                adCateAdd(adcate).then(res => {
+            const promotion = this.promotion;
+            if (promotion.id == 0) {
+                promotionAdd(promotion).then(res => {
                     if (res.success) {
                         //刷新页面
                         this.dialogFormVisible = false;
-                        this.getAdCatesPage(this.page.current)
+                        this.getpromotionPage(this.page.current)
                         ElMessage(res.msg)
                     }
                     else {
@@ -152,12 +182,12 @@ export default defineComponent({
                     ElMessage('网络错误联系管理员')
                 })
             }
-            else{
-                adCateEdit(adcate).then(res => {
+            else {
+                promotionEdit(promotion).then(res => {
                     if (res.success) {
                         //刷新页面
                         this.dialogFormVisible = false;
-                        this.getAdCatesPage(this.page.current)
+                        this.getpromotionPage(this.page.current)
                         ElMessage(res.msg)
                     }
                     else {
