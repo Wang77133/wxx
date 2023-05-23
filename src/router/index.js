@@ -30,6 +30,12 @@ const routes = [{
             import ('@/views/admin/sms-coupon.vue') // 懒加载
     },
     {
+        path: '/sms-flash-promotion-session',
+        name: 'sms-flash-promotion-session',
+        component: () =>
+            import ('@/views/admin/sms-flash-promotion-session.vue') // 懒加载
+    },
+    {
         path: '/cms-subject-category',
         name: 'cms-subject-category',
         component: () =>
