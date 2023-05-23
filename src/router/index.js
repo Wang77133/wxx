@@ -13,59 +13,25 @@ import { useUserStore } from '../store/user'
 
 //路由表
 const routes = [
-
   {
-    path: '/', //访问路径 http://127.0.0.1:5173/cx/XfDGdOkjVo7deIxQjurcf8BEnNf
+    path: '/',//访问路径 http://127.0.0.1:5173/cx/XfDGdOkjVo7deIxQjurcf8BEnNf 
     name: 'home', //命名路由
-    component: Index, //key:value  默认//页面组件 components 普通组件 页面组件和普通组件是一对多
-  },
-
-  {
-    path: '/cms_log', //访问路径 http://127.0.0.1:5173/cx/XfDGdOkjVo7deIxQjurcf8BEnNf
-    name: 'cms_log', //命名路由
-    component: () => import('@/views/admin/cms_log.vue'),
-  },
-
-  {
-    path: '/ums-member-receive-address',
-    name: 'ums-member-receive-address',
-    component: () => import('../views/admin/ums-member-receive-address.vue')// 懒加载
-  },
-  {
-    path: '/cms-help-category',
-    name: 'cms-help-category',
-    component: () => import('../views/admin/cms-help-category.vue')// 懒加载
-  },
-  {
-    path: '/cms-topic',
-    name: 'cms-topic',
-    component: () => import('@/views/admin/cms-topic.vue'), // 懒加载
+    component: Index,   //key:value  默认//页面组件 components 普通组件 页面组件和普通组件是一对多
   },
   {
     path: '/adcate',
     name: 'adCate',
-    component: () => import('@/views/static/adCate.vue'), // 懒加载
+    component: () => import('../views/static/adCate.vue')// 懒加载
   },
   {
-    path: '/sms-flash-promotion',
-    name: 'sms-flash-promotion',
-    component: () => import('@/views/admin/sms-flash-promotion.vue'), // 懒加载
+    path: '/sms-coupon',
+    name: 'sms-coupon',
+    component: () => import('@/views/admin/sms-coupon.vue')// 懒加载
   },
-  {
-    path: '/cms-topic',
-    name: 'cms-topic',
-    component: () => import('@/views/admin/cms-topic.vue'), // 懒加载
-  },
-  {
-    path: '/pms-product-category',
-    name: 'pms-product-category',
-    component: () => import('@/views/admin/pms-product-category.vue'), // 懒加载
-  },
-
   {
     path: '/login',
     name: 'login',
-    component: () => import('@/views/static/login.vue'), // 懒加载
+    component: () => import('../views/static/login.vue')// 懒加载
   },
   {
     path: '/admin',
@@ -75,37 +41,122 @@ const routes = [
       {
         path: '',
         name: 'admin-index',
-        component: () => import('@/views/admin/index.vue'),
+        component: () => import('@/views/admin/index.vue')
       },
       {
         path: 'info',
         name: 'admin-info',
-        component: () => import('@/views/admin/info.vue'),
+        component: () => import('@/views/admin/info.vue')
       },
       {
         path: 'logout',
         name: 'admin-logout',
-        component: () => import('@/views/admin/logout.vue'),
-      },
-      {
+        component: () => import('@/views/admin/logout.vue')
+      }, {
         path: 'changepassword',
         name: 'admin-changepassword',
-        component: () => import('@/views/admin/changepassword.vue'),
+        component: () => import('@/views/admin/changepassword.vue')
       },
       {
         path: 'forgetpassword',
         name: 'admin-forgetpassword',
-        component: () => import('@/views/admin/forgetpassword.vue'),
+        component: () => import('@/views/admin/forgetpassword.vue')
       },
+
+      {
+        path: '/', //访问路径 http://127.0.0.1:5173/cx/XfDGdOkjVo7deIxQjurcf8BEnNf
+        name: 'home', //命名路由
+        component: Index, //key:value  默认//页面组件 components 普通组件 页面组件和普通组件是一对多
+      },
+
+      {
+        path: '/cms_log', //访问路径 http://127.0.0.1:5173/cx/XfDGdOkjVo7deIxQjurcf8BEnNf
+        name: 'cms_log', //命名路由
+        component: () => import('@/views/admin/cms_log.vue'),
+      },
+
+      {
+        path: '/ums-member-receive-address',
+        name: 'ums-member-receive-address',
+        component: () => import('../views/admin/ums-member-receive-address.vue')// 懒加载
+      },
+      {
+        path: '/cms-help-category',
+        name: 'cms-help-category',
+        component: () => import('../views/admin/cms-help-category.vue')// 懒加载
+      },
+      {
+        path: '/cms-topic',
+        name: 'cms-topic',
+        component: () => import('@/views/admin/cms-topic.vue'), // 懒加载
+      },
+      {
+        path: '/adcate',
+        name: 'adCate',
+        component: () => import('@/views/static/adCate.vue'), // 懒加载
+      },
+      {
+        path: '/sms-flash-promotion',
+        name: 'sms-flash-promotion',
+        component: () => import('@/views/admin/sms-flash-promotion.vue'), // 懒加载
+      },
+      {
+        path: '/cms-topic',
+        name: 'cms-topic',
+        component: () => import('@/views/admin/cms-topic.vue'), // 懒加载
+      },
+      {
+        path: '/pms-product-category',
+        name: 'pms-product-category',
+        component: () => import('@/views/admin/pms-product-category.vue'), // 懒加载
+      },
+
+      {
+        path: '/login',
+        name: 'login',
+        component: () => import('@/views/static/login.vue'), // 懒加载
+      },
+      {
+        path: '/admin',
+        name: 'admin',
+        component: LayoutAdmin,
+        children: [
+          {
+            path: '',
+            name: 'admin-index',
+            component: () => import('@/views/admin/index.vue'),
+          },
+          {
+            path: 'info',
+            name: 'admin-info',
+            component: () => import('@/views/admin/info.vue'),
+          },
+          {
+            path: 'logout',
+            name: 'admin-logout',
+            component: () => import('@/views/admin/logout.vue'),
+          },
+          {
+            path: 'changepassword',
+            name: 'admin-changepassword',
+            component: () => import('@/views/admin/changepassword.vue'),
+          },
+          {
+            path: 'forgetpassword',
+            name: 'admin-forgetpassword',
+            component: () => import('@/views/admin/forgetpassword.vue'),
+          },
+        ],
+      },
+
+
+      {
+        path: '/:pathMatch(.*)*',
+        name: '404',
+        component: () => import('../views/404.vue'), // 懒加载
+      }
     ],
-  },
-
-
-  {
-    path: '/:pathMatch(.*)*',
-    name: '404',
-    component: () => import('../views/404.vue'), // 懒加载
-  },
+  }
 ]
 const router = createRouter({
   //模式
