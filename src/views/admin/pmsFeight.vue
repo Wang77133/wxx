@@ -9,118 +9,117 @@
     -->
 
 
-<<<<<<< HEAD
     <div class="adCates">
         <div class="adcate-tools">
-            <el-button type="warning" @click="toAdd">添加</el-button>
+            <el-button type="success" @click="toAdd">添加</el-button>
         </div>
         <el-table :data="adCates" style="width: 100%">
-=======
-    <div class="topics">
-        <div class="adcate-tools">
-            <el-button type="warning" @click="toAdd">添加</el-button>
-        </div>
-        <el-table :data="topics" style="width: 100%">
->>>>>>> 457ea9345e6dab130cc7b509cabf3dbe66bd6893
-            <el-table-column fixed prop="id" label="#" width="50" />
-            <el-table-column prop="attendCount" label="参与人数" />
-            <el-table-column prop="attentionCount" label="关注人数" />
-            <el-table-column prop="awardName" label="奖品名称"/>
-            <el-table-column prop="attendType" label="参与方式" />
-            <el-table-column prop="content" label="话题内容"/>
+            <el-table-column fixed prop="id" label="ID" width="50" />
+            <el-table-column prop="name" label="商品名称" />
+            <el-table-column prop="chargeType" label="计费类型" />
+            <el-table-column prop="firstWeight" label="首重" />
+            <el-table-column prop="firstFee" label="首费"/>
+            <el-table-column prop="continueWeight" label="续重重量" />
+            <el-table-column prop="continmeFee" label="续重费用"/>
+            <el-table-column prop="dest" label="目的地"/>
 
-            <el-table-column fixed="right" label="操作" width="120">
+            <el-table-column fixed="right" label="操作" width="250">
                 <template #default="scope">
-                    <el-button link type="primary" size="small" @click="toEdit(scope.row)">更新</el-button>
-                    <el-button link type="primary" size="small" @click="del(scope.row.id)">删除</el-button>
+                    <el-button type="primary" size="small" @click="toEdit(scope.row)">更新</el-button>
+                    <el-button type="danger" size="small" @click="del(scope.row.id)">删除</el-button>
+                    <el-button type="warning" size="small" @click="selectById">查找</el-button>
+                    <!-- <el-button link type="primary" size="small" @click="toEdit(scope.row)">更新</el-button> -->
+                    <!-- <el-button link type="primary" size="small" @click="del(scope.row.id)">删除</el-button> -->
+
                 </template>
             </el-table-column>
         </el-table>
         <el-pagination layout="prev, pager, next" :page-size="page.size" :total="page.total"
             @current-change="currentchange" />
     </div>
-    <el-dialog v-model="dialogFormVisible" title="话题编辑">
-<<<<<<< HEAD
+    <el-dialog v-model="dialogFormVisible" title="计费编辑">
         <el-form :model="adCate">
-            <el-form-item label="参与人数" :label-width="formLabelWidth">
-                <el-input v-model="adCate.attendCount" autocomplete="off" />
+            <el-form-item label="商品名称" :label-width="formLabelWidth">
+                <el-input v-model="adCate.name" autocomplete="off" />
             </el-form-item>
-            <el-form-item label="参与方式" :label-width="formLabelWidth">
-                <el-input v-model="adCate.attendType" autocomplete="off" />
+            <el-form-item label="计费类型" :label-width="formLabelWidth">
+                <el-input v-model="adCate.chargeType" autocomplete="off" />
             </el-form-item>
-            <el-form-item label="关注人数" :label-width="formLabelWidth">
-                <el-input v-model="adCate.attentionCount" autocomplete="off" />
+            <el-form-item label="首重" :label-width="formLabelWidth">
+                <el-input v-model="adCate.firstWeight" autocomplete="off" />
             </el-form-item>
-            <el-form-item label="奖励名称" :label-width="formLabelWidth">
-                <el-input v-model="adCate.awardName" autocomplete="off" />
+            <el-form-item label="首费" :label-width="formLabelWidth">
+                <el-input v-model="adCate.firstFee" autocomplete="off" />
             </el-form-item>
-            <el-form-item label="话题内容" :label-width="formLabelWidth">
-                <el-input v-model="adCate.content" autocomplete="off" />
-=======
-        <el-form :model="topic">
-            <el-form-item label="参与人数" :label-width="formLabelWidth">
-                <el-input v-model="topic.attendCount" autocomplete="off" />
+            <el-form-item label="续重重量" :label-width="formLabelWidth">
+                <el-input v-model="adCate.continueWeight" autocomplete="off" />
             </el-form-item>
-            <el-form-item label="参与方式" :label-width="formLabelWidth">
-                <el-input v-model="topic.attendType" autocomplete="off" />
+            <el-form-item label="续重费用" :label-width="formLabelWidth">
+                <el-input v-model="adCate.continmeFee" autocomplete="off" />
             </el-form-item>
-            <el-form-item label="关注人数" :label-width="formLabelWidth">
-                <el-input v-model="topic.attentionCount" autocomplete="off" />
-            </el-form-item>
-            <el-form-item label="奖励名称" :label-width="formLabelWidth">
-                <el-input v-model="topic.awardName" autocomplete="off" />
-            </el-form-item>
-            <el-form-item label="话题内容" :label-width="formLabelWidth">
-                <el-input v-model="topic.content" autocomplete="off" />
->>>>>>> 457ea9345e6dab130cc7b509cabf3dbe66bd6893
+            <el-form-item label="目的地" :label-width="formLabelWidth">
+                <el-input v-model="adCate.dest" autocomplete="off" />
             </el-form-item>
         </el-form>
         <template #footer>
             <span class="dialog-footer">
-                <el-button @click="dialogFormVisible = false">Cancel</el-button>
+                <el-button @click="dialogFormVisible = false">取消</el-button>
                 <el-button type="primary" @click="save">
                     保存
                 </el-button>
             </span>
         </template>
     </el-dialog>
+
+    <!-- 按id查询按钮点击后出现的表单 -->
+    <el-dialog v-model="dialogFormVisibleById" title="查询">
+        <el-form :model="adCate">
+            <el-form-item label="请输入ID" :label-width="formLabelWidth">
+                <el-input v-model="searchText" placeholder="按ID查询，请输入ID" autocomplete="off" />
+            </el-form-item>
+        </el-form>
+
+        <template #footer>
+            <span class="dialog-footer">
+                <el-button @click="dialogFormVisibleById = false">取消</el-button>
+                <el-button type="primary" @click="getById(searchText)">查询
+                </el-button>
+            </span>
+        </template>
+    </el-dialog>
+
+
+
 </template>
 
 <script>
 import { defineComponent } from "vue"
-import { adTopicPage, adTopicDelId, adTopicAdd, adTopicEdit } from "../../http/cms-topic";
+import { adTopicPage, adTopicDelId, adTopicAdd, adTopicEdit,couponOne} from "../../http/pmsFeight";
 import { ElMessage } from 'element-plus'
 import {cloneDeep} from 'lodash-es'
 export default defineComponent({
     data() {
         return {
-<<<<<<< HEAD
+            searchText: "",
+            coupons: [],
             adCates: [],
-=======
-            topics: [],
->>>>>>> 457ea9345e6dab130cc7b509cabf3dbe66bd6893
             page: {
                 total: 0,
                 current: 1,
                 size: 10
             },
             dialogFormVisible: false,
-<<<<<<< HEAD
+            dialogFormVisibleById:false,
             adCate: {
-=======
-            topic: {
->>>>>>> 457ea9345e6dab130cc7b509cabf3dbe66bd6893
-                //参与人数
-                "attendCount": "",
-                "id": 0,//标志点 0添加 >0 更新
-                //关注人数
-                "attentionCount": "",
-                //奖品名称
-                "awardName": '',
-                //参与方式
-                "attendType": '',
-                //话题内容
-                "content" : ''
+             
+                "chargeType": 0,
+                "continmeFee": 0,
+                "continueWeight": 0,
+                "dest": "",
+                "firstFee": 0,
+                "firstWeight": 0,
+                "id": 0,
+                "name": ""
             },
             formLabelWidth: 80
         }
@@ -132,25 +131,17 @@ export default defineComponent({
         toEdit(adcate) {
             console.log(adcate);
             this.dialogFormVisible=true;
-<<<<<<< HEAD
             this.adCate=cloneDeep(adcate);    
-=======
-            this.topic=cloneDeep(adcate);    
->>>>>>> 457ea9345e6dab130cc7b509cabf3dbe66bd6893
         },
         getAdCatesPage(current) {
             const data = {
                 current: current,
-                size: 2
+                size: 5
             }
             adTopicPage(data).then(res => {
                 console.log(res);
                 const page = res.data.page;
-<<<<<<< HEAD
                 this.adCates = page.records;
-=======
-                this.topics = page.records;
->>>>>>> 457ea9345e6dab130cc7b509cabf3dbe66bd6893
                 this.page = page;
             }).catch(err => {
                 console.log(err);
@@ -189,26 +180,43 @@ export default defineComponent({
         },
         toAdd() {
             //到添加的页面
-<<<<<<< HEAD
-            this.adCate =  {
-=======
-            this.topic =  {
->>>>>>> 457ea9345e6dab130cc7b509cabf3dbe66bd6893
-                "attendCount": "",
+            this.adCate =  { 
+                "chargeType": 0,
+                "continmeFee": 0,
+                "continueWeight": 0,
+                "dest": "",
+                "firstFee": 0,
+                "firstWeight": 0,
                 "id": 0,
-                "attentionCount": "",
-                "awardName": '',
-                "attendType": '',
-                "content" : ''
+                "name": ""
             },
             this.dialogFormVisible = true;
         },
+
+        selectById() {
+            this.dialogFormVisibleById = true;
+        },
+        getById(id) {
+            this.coupons = [];//新建一个数组
+            const params = {
+                id: id
+            }
+            couponOne(params).then(res => {
+                this.dialogFormVisibleById = false;
+                this.coupons.push(res.data.help);//在这个新数组里加入查到的信息
+                const adCates = this.coupons;//将新数组赋值
+                this.adCates = adCates;//显示
+                ElMessage("查询成功")
+            }).catch(err => {
+                ElMessage("查询失败")
+                console.log(err);
+            })
+        },
+
+
+
         save() {
-<<<<<<< HEAD
             const adcate = this.adCate;
-=======
-            const adcate = this.topic;
->>>>>>> 457ea9345e6dab130cc7b509cabf3dbe66bd6893
             if (adcate.id == 0) {
                 adTopicAdd(adcate).then(res => {
                     if (res.success) {

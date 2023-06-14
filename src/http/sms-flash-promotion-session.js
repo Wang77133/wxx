@@ -1,11 +1,11 @@
-<<<<<<< HEAD
+
 //统一api管理
 import instance from "./axios";
 // data json
 const userLogin=(data)=>{
     //返回Promise对象
    return instance.request({
-        url:'http://api.jqrjq.cn/api/mobile/elogin', //fullpath=baseURL+url  http://api.jqrjq.cn/api/mobile/elogin
+        url:'api/mobile/elogin', //fullpath=baseURL+url  http://api.jqrjq.cn/api/mobile/elogin
         method:'post',
         data,
       
@@ -18,36 +18,36 @@ const adminLogin=(data)=>{
         data
    })
 }
-const adCatePage=(data)=>{
+const adSessionPage=(data)=>{
    return instance.request({
-    url:'api/adcate/page',
+    url:'/mall/sms-flash-promotion-session/page',
     method:'post',
     data
    })
 }
-const adCateDelId=(params)=>{
+const adSessionDelId=(params)=>{
     return instance.request({
-        url:'api/adcate/delete',
+        url:'/mall/sms-flash-promotion-session/del/' + params.id,
         params
     })
 }
-const adCateAdd=(data)=>{
+const adSessionAdd=(data)=>{
     return instance.request({
-        url:'api/adcate/add',
+        url:'/mall/sms-flash-promotion-session/add',
         method:'post',
         data
     })
 }
-const adCateEdit=(data)=>{
+const adSessionEdit=(data)=>{
     return instance.request({
-        url:'api/adcate/edit',
+        url:'/mall/sms-flash-promotion-session/edit',
         method:'post',
         data
     })
 }
-=======
+
 import axios from 'axios'
->>>>>>> 457ea9345e6dab130cc7b509cabf3dbe66bd6893
+
 
 // 创建自定义的 Axios 实例
 const api = axios.create({
@@ -66,7 +66,14 @@ api.interceptors.request.use(
     return Promise.reject(error)
   }
 )
-
+export {
+    userLogin,
+    adminLogin,
+    adSessionPage,
+    adSessionDelId,
+    adSessionAdd,
+    adSessionEdit
+} 
 // 添加响应拦截器
 api.interceptors.response.use(
   (response) => {
@@ -78,5 +85,5 @@ api.interceptors.response.use(
     return Promise.reject(error)
   }
 )
-
 export default api
+

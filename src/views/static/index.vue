@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
   <el-row class="tac">
     <!-- <el-col :span="3">
       <el-menu
@@ -175,3 +176,33 @@ export default defineComponent({
   padding: 0;
 }
 </style>
+=======
+
+    <router-link to="/smsHomeAdvertise">    
+    <!-- 在路由里面加入你的，然后to的值改成你的 -->
+    <aside></aside>
+    <main></main>
+    </router-link>
+  </template>
+  <script>
+  import Aside from '@/layout/admin/aside.vue'
+  import Main from '@/layout/admin/main.vue'
+  import { defineComponent } from "vue"
+  export default defineComponent({
+      components: {
+          Aside,
+          Main
+      }
+  
+  });
+  </script>
+  
+  <style lang="scss" scoped>
+  *{
+      padding: 0 !important;
+      margin: 0 !important;
+  }
+  
+  </style>
+  
+>>>>>>> 457ea9345e6dab130cc7b509cabf3dbe66bd6893

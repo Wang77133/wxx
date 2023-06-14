@@ -7,59 +7,36 @@
          通过什么方式：路由守卫
          3 添加和更新
     -->
-
-
+    <meta name="referrer" content="no-referrer"/>
+    <h1>首页促销商品</h1>
     <div class="adCates">
-        <div class="adcate-tools">
-            <el-button type="warning" @click="toAdd">添加</el-button>
-        </div>
         <el-table :data="adCates" style="width: 100%">
-            <el-table-column fixed prop="id" label="#" width="50" />
-            <el-table-column prop="name" label="广告类型" />
-            <el-table-column prop="width" label="宽度" width="120" />
-            <el-table-column prop="height" label="高度" width="120" />
-
-            <el-table-column fixed="right" label="操作" width="120">
-                <template #default="scope">
-                    <el-button link type="primary" size="small" @click="toEdit(scope.row)">更新</el-button>
-                    <el-button link type="primary" size="small" @click="del(scope.row.id)">删除</el-button>
-                </template>
+            <el-table-column fixed prop="id" label="id" width="50" />
+            <el-table-column prop="productId" label="推荐品id" />
+            <el-table-column prop="productName" label="推荐品名称" />
+            <el-table-column prop="recommendStatus" label="推荐状态"/>
+            <el-table-column prop="sort" label="排序">
             </el-table-column>
         </el-table>
-        <el-pagination layout="prev, pager, next" :page-size="page.size" :total="page.total"
-            @current-change="currentchange" />
+         <el-pagination
+           small background layout="prev, pager, next" :page-size="page.size" :total="page.total"
+            @current-change="currentchange" /> 
     </div>
-    <el-dialog v-model="dialogFormVisible" title="广告类型编辑">
-        <el-form :model="adCate">
-            <el-form-item label="广告类型" :label-width="formLabelWidth">
-                <el-input v-model="adCate.name" autocomplete="off" />
-            </el-form-item>
-            <el-form-item label="width" :label-width="formLabelWidth">
-                <el-input v-model="adCate.width" autocomplete="off" />
-            </el-form-item>
-            <el-form-item label="height" :label-width="formLabelWidth">
-                <el-input v-model="adCate.height" autocomplete="off" />
-            </el-form-item>
-        </el-form>
-        <template #footer>
-            <span class="dialog-footer">
-                <el-button @click="dialogFormVisible = false">Cancel</el-button>
-                <el-button type="primary" @click="save">
-                    保存
-                </el-button>
-            </span>
-        </template>
-    </el-dialog>
-</template>
+    
 
-<script>
-import { defineComponent } from "vue"
-import { adCatePage, adCateDelId, adCateAdd, adCateEdit } from "../../http/school.js";
-import { ElMessage } from 'element-plus'
-import {cloneDeep} from 'lodash-es'
-export default defineComponent({
+  </template>
+  
+  
+  <script>
+  import {  defineComponent } from "vue"
+  import {    productadTaskAdd,productadTaskDelId,productadTaskEdit,productadTaskPage,productcouponOne,} from "../../http/userproduct";
+  import { ElMessage } from 'element-plus'
+  import { cloneDeep } from 'lodash-es'
+  export default defineComponent({
     data() {
         return {
+            searchText: "",
+            coupons: [],
             adCates: [],
             page: {
                 total: 0,
@@ -67,13 +44,15 @@ export default defineComponent({
                 size: 10
             },
             dialogFormVisible: false,
+            dialogFormVisibleById :true,
             adCate: {
-                "height": "",
-                "id": 0,//标志点 0添加 >0 更新
-                "name": "",
-                "width": ""
+                "id": 0,
+               "productId": 0,
+               "productName": "",
+               "recommendStatus": 0,
+               "sort": 0
             },
-            formLabelWidth: 80
+            formLabelWidth: 100,
         }
     },
     mounted() {
@@ -88,9 +67,9 @@ export default defineComponent({
         getAdCatesPage(current) {
             const data = {
                 current: current,
-                size: 2
+                size: 5
             }
-            adCatePage(data).then(res => {
+            productadTaskPage(data).then(res => {
                 console.log(res);
                 const page = res.data.page;
                 this.adCates = page.records;
@@ -98,7 +77,7 @@ export default defineComponent({
             }).catch(err => {
                 console.log(err);
             })
-
+  
         },
         currentchange(current) {
             // console.log(current);
@@ -109,35 +88,67 @@ export default defineComponent({
             //删除数据
             //模拟删除，服务器进行处理 
             //要别人反悔机会
-            // 如果只有一条数据，删除数据之后如何处理？
+            //如果只有一条数据，删除数据之后如何处理？
             //人机交互
             console.log(id)
             const params = {
                 id: id
             }
-            adCateDelId(params).then(res => {
+            productadTaskDelId(params).then(res => {
                 if (res.success) {
                     this.getAdCatesPage(this.page.current)
-
+  
                 }
                 else {
                     console.log(res.msg)
                     return false
                 }
-
-
+  
             }).catch(err => {
-
+  
             })
         },
         toAdd() {
             //到添加的页面
+            this.adCate =  {
+                "id": 0,
+               "productId": 0,
+               "productName": "",
+               "recommendStatus": 0,
+               "sort": 0
+            },
             this.dialogFormVisible = true;
         },
+  
+        selectById() {
+            this.dialogFormVisibleById = true;
+        },
+        // 按id查询
+        getById(id) {
+            this.coupons = [];//新建一个数组
+            const params = {
+                id: id
+            }
+            productcouponOne(params).then(res => {
+                this.dialogFormVisibleById = false;
+                this.coupons.push(res.data.help);//在这个新数组里加入查到的信息
+                const adCates = this.coupons;//将新数组赋值
+                this.adCates = adCates;//显示
+                ElMessage("品牌id查询成功")
+            }).catch(err => {
+                ElMessage("品牌id查询失败")
+                console.log(err);
+            })
+        },
+  
+  
+  
+  
+  
         save() {
             const adcate = this.adCate;
             if (adcate.id == 0) {
-                adCateAdd(adcate).then(res => {
+                productadTaskAdd(adcate).then(res => {
                     if (res.success) {
                         //刷新页面
                         this.dialogFormVisible = false;
@@ -153,7 +164,7 @@ export default defineComponent({
                 })
             }
             else{
-                adCateEdit(adcate).then(res => {
+                productadTaskEdit(adcate).then(res => {
                     if (res.success) {
                         //刷新页面
                         this.dialogFormVisible = false;
@@ -168,12 +179,13 @@ export default defineComponent({
                     ElMessage('网络错误联系管理员')
                 })
             }
-
+  
         }
-
+  
     }
-
-});
-</script>
-
-<style lang="scss" scoped></style>
+  
+  });
+  </script>
+  
+  <style lang="scss" scoped></style>
+  

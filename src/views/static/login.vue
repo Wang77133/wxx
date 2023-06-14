@@ -39,7 +39,7 @@
 <script>
 import { defineComponent, ref } from "vue"
 import { mapActions, storeToRefs } from "pinia";
-import { userLogin } from "../../http";
+import { userLogin } from "../../http/school.js";
 import { useUserStore } from "../../store/user";
 export default defineComponent({
     setup() {

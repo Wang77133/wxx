@@ -1,11 +1,10 @@
-<<<<<<< HEAD
 //统一api管理
 import instance from "./axios";
 // data json
 const userLogin=(data)=>{
     //返回Promise对象
    return instance.request({
-        url:'http://api.jqrjq.cn/api/mobile/elogin', //fullpath=baseURL+url  http://api.jqrjq.cn/api/mobile/elogin
+        url:'api/mobile/elogin', //fullpath=baseURL+url  http://api.jqrjq.cn/api/mobile/elogin
         method:'post',
         data,
       
@@ -18,36 +17,42 @@ const adminLogin=(data)=>{
         data
    })
 }
-const adCatePage=(data)=>{
+const adTopicPage=(data)=>{
    return instance.request({
-    url:'api/adcate/page',
+    url:'mall/pms-product-attribute-category/page',
     method:'post',
     data
    })
 }
-const adCateDelId=(params)=>{
+const adTopicDelId=(params)=>{
     return instance.request({
-        url:'api/adcate/delete',
+        url:'mall/pms-product-attribute-category/del/' + params.id,
         params
     })
 }
-const adCateAdd=(data)=>{
+const adTopicAdd=(data)=>{
     return instance.request({
-        url:'api/adcate/add',
+        url:'mall/pms-product-attribute-category/add',
         method:'post',
         data
     })
 }
-const adCateEdit=(data)=>{
+const adTopicEdit=(data)=>{
     return instance.request({
-        url:'api/adcate/edit',
+        url:'mall/pms-product-attribute-category/edit',
         method:'post',
         data
     })
 }
-=======
+const couponOne = (params) => {
+  return instance.request({
+      url: 'mall/pms-product-attribute-category/one/' + params.id,
+      params
+  })
+}
+
 import axios from 'axios'
->>>>>>> 457ea9345e6dab130cc7b509cabf3dbe66bd6893
+
 
 // 创建自定义的 Axios 实例
 const api = axios.create({
@@ -66,7 +71,15 @@ api.interceptors.request.use(
     return Promise.reject(error)
   }
 )
-
+export {
+    userLogin,
+    adminLogin,
+    adTopicPage,
+    adTopicDelId,
+    adTopicAdd,
+    adTopicEdit,
+    couponOne
+} 
 // 添加响应拦截器
 api.interceptors.response.use(
   (response) => {
@@ -78,5 +91,5 @@ api.interceptors.response.use(
     return Promise.reject(error)
   }
 )
-
 export default api
+

@@ -9,15 +9,19 @@
     -->
 
 
-    <div class="adCates">
-        <div class="adcate-tools">
+    <div class="receive">
+        <div class="receive">
             <el-button type="warning" @click="toAdd">添加</el-button>
         </div>
-        <el-table :data="adCates" style="width: 100%">
-            <el-table-column fixed prop="id" label="#" width="50" />
-            <el-table-column prop="name" label="广告类型" />
-            <el-table-column prop="width" label="宽度" width="120" />
-            <el-table-column prop="height" label="高度" width="120" />
+        <el-table :data="receives" style="width: 100%">
+            <el-table-column fixed prop="id" width="50" />
+            <el-table-column prop="city" label="城市" width="120" />
+            <el-table-column prop="defaultStatus" label="是否为默认" width="120" />
+            <el-table-column prop="detailAddress" label="详细地址(街道)" width="120" />
+            <el-table-column prop="name" label="收货人名称" width="120" />
+            <el-table-column prop="postCode" label="邮政编码" width="120" />
+            <el-table-column prop="province" label="省份/直辖市" width="120" />
+            <el-table-column prop="region" label="区" width="120" />
 
             <el-table-column fixed="right" label="操作" width="120">
                 <template #default="scope">
@@ -25,20 +29,34 @@
                     <el-button link type="primary" size="small" @click="del(scope.row.id)">删除</el-button>
                 </template>
             </el-table-column>
+
         </el-table>
+
         <el-pagination layout="prev, pager, next" :page-size="page.size" :total="page.total"
             @current-change="currentchange" />
     </div>
-    <el-dialog v-model="dialogFormVisible" title="广告类型编辑">
-        <el-form :model="adCate">
-            <el-form-item label="广告类型" :label-width="formLabelWidth">
-                <el-input v-model="adCate.name" autocomplete="off" />
+    <el-dialog v-model="dialogFormVisible" title="表单插入">
+        <el-form :model="receive">
+            <el-form-item label="城市" :label-width="formLabelWidth">
+                <el-input v-model="receive.city" autocomplete="off" />
             </el-form-item>
-            <el-form-item label="width" :label-width="formLabelWidth">
-                <el-input v-model="adCate.width" autocomplete="off" />
+            <el-form-item label="是否为默认" :label-width="formLabelWidth">
+                <el-input v-model="receive.defaultStatus" autocomplete="off" />
             </el-form-item>
-            <el-form-item label="height" :label-width="formLabelWidth">
-                <el-input v-model="adCate.height" autocomplete="off" />
+            <el-form-item label="详细地址(街道)" :label-width="formLabelWidth">
+                <el-input v-model="receive.detailAddress" autocomplete="off" />
+            </el-form-item>
+            <el-form-item label="收货人名称" :label-width="formLabelWidth">
+                <el-input v-model="receive.name" autocomplete="off" />
+            </el-form-item>
+            <el-form-item label="邮政编码" :label-width="formLabelWidth">
+                <el-input v-model="receive.postCode" autocomplete="off" />
+            </el-form-item>
+            <el-form-item label="省份/直辖市" :label-width="formLabelWidth">
+                <el-input v-model="receive.province" autocomplete="off" />
+            </el-form-item>
+            <el-form-item label="区" :label-width="formLabelWidth">
+                <el-input v-model="receive.region" autocomplete="off" />
             </el-form-item>
         </el-form>
         <template #footer>
@@ -54,46 +72,52 @@
 
 <script>
 import { defineComponent } from "vue"
-import { adCatePage, adCateDelId, adCateAdd, adCateEdit } from "../../http/school.js";
+import { receivePage, receiveDelId, receiveAdd, receiveEdit } from "../../http/ums-member-receive-address";
 import { ElMessage } from 'element-plus'
-import {cloneDeep} from 'lodash-es'
+import { cloneDeep } from 'lodash-es'
 export default defineComponent({
     data() {
         return {
-            adCates: [],
+            receives: [],
             page: {
                 total: 0,
                 current: 1,
                 size: 10
             },
             dialogFormVisible: false,
-            adCate: {
-                "height": "",
-                "id": 0,//标志点 0添加 >0 更新
+            receive: {
+                "city": "",
+                "defaultStatus": 0,
+                "detailAddress": "",
+                "id": 0,
+                "memberId": 0,
                 "name": "",
-                "width": ""
+                "phoneNumber": "",
+                "postCode": "",
+                "province": "",
+                "region": ""
             },
             formLabelWidth: 80
         }
     },
     mounted() {
-        this.getAdCatesPage(1)
+        this.getreceivePage(1)
     },
     methods: {
-        toEdit(adcate) {
-            console.log(adcate);
-            this.dialogFormVisible=true;
-            this.adCate=cloneDeep(adcate);    
+        toEdit(category) {
+            console.log(category);
+            this.dialogFormVisible = true;
+            this.category = cloneDeep(category);
         },
-        getAdCatesPage(current) {
+        getreceivePage(current) {
             const data = {
                 current: current,
                 size: 2
             }
-            adCatePage(data).then(res => {
+            receivePage(data).then(res => {
                 console.log(res);
                 const page = res.data.page;
-                this.adCates = page.records;
+                this.receives = res.data.page.records;
                 this.page = page;
             }).catch(err => {
                 console.log(err);
@@ -102,8 +126,18 @@ export default defineComponent({
         },
         currentchange(current) {
             // console.log(current);
-            this.getAdCatesPage(current);
+            this.receive = {
+                "createTime": "",
+                "endDate": "",
+                "id": 0,
+                "startDate": "",
+                "status": 0,
+                "title": ""
+            },
+                this.getreceivePage(current);
             this.page.current = current;//数据更新目前显示的页面
+
+
         },
         del(id) {
             //删除数据
@@ -115,9 +149,9 @@ export default defineComponent({
             const params = {
                 id: id
             }
-            adCateDelId(params).then(res => {
+            receiveDelId(params).then(res => {
                 if (res.success) {
-                    this.getAdCatesPage(this.page.current)
+                    this.getreceivePage(this.page.current)
 
                 }
                 else {
@@ -132,16 +166,24 @@ export default defineComponent({
         },
         toAdd() {
             //到添加的页面
-            this.dialogFormVisible = true;
+            this.receive = {
+                "createTime": "",
+                "endDate": "",
+                "id": 0,
+                "startDate": "",
+                "status": 0,
+                "title": ""
+            },
+                this.dialogFormVisible = true;
         },
         save() {
-            const adcate = this.adCate;
-            if (adcate.id == 0) {
-                adCateAdd(adcate).then(res => {
+            const receive = this.receive;
+            if (receive.id == 0) {
+                receiveAdd(receive).then(res => {
                     if (res.success) {
                         //刷新页面
                         this.dialogFormVisible = false;
-                        this.getAdCatesPage(this.page.current)
+                        this.getreceivePage(this.page.current)
                         ElMessage(res.msg)
                     }
                     else {
@@ -152,12 +194,12 @@ export default defineComponent({
                     ElMessage('网络错误联系管理员')
                 })
             }
-            else{
-                adCateEdit(adcate).then(res => {
+            else {
+                receiveEdit(receive).then(res => {
                     if (res.success) {
                         //刷新页面
                         this.dialogFormVisible = false;
-                        this.getAdCatesPage(this.page.current)
+                        this.getreceivePage(this.page.current)
                         ElMessage(res.msg)
                     }
                     else {

@@ -11,13 +11,17 @@
 
     <div class="adCates">
         <div class="adcate-tools">
+            <el-button type="warning" @click="selectById">查询</el-button>
             <el-button type="warning" @click="toAdd">添加</el-button>
         </div>
         <el-table :data="adCates" style="width: 100%">
-            <el-table-column fixed prop="id" label="#" width="50" />
-            <el-table-column prop="name" label="广告类型" />
-            <el-table-column prop="width" label="宽度" width="120" />
-            <el-table-column prop="height" label="高度" width="120" />
+            <el-table-column prop="id" label="id"></el-table-column>
+            <el-table-column prop="consumePerPoint" label="每消费多少元获取1个点"></el-table-column>
+            <el-table-column prop="continueSignDay" label="连续签到天数"></el-table-column>
+            <el-table-column prop="continueSignPoint" label="连续签到赠送数量"></el-table-column>
+            <el-table-column prop="lowOrderAmount" label="最低获取点数的订单金额"></el-table-column>
+            <el-table-column prop="maxPointPerOrder" label="每笔订单最高获取点数"></el-table-column>
+            <el-table-column prop="type" label="类型"></el-table-column>
 
             <el-table-column fixed="right" label="操作" width="120">
                 <template #default="scope">
@@ -29,16 +33,28 @@
         <el-pagination layout="prev, pager, next" :page-size="page.size" :total="page.total"
             @current-change="currentchange" />
     </div>
-    <el-dialog v-model="dialogFormVisible" title="广告类型编辑">
+    <el-dialog v-model="dialogFormVisible" title="编辑">
         <el-form :model="adCate">
-            <el-form-item label="广告类型" :label-width="formLabelWidth">
+            <!-- <el-form-item label="id" :label-width="formLabelWidth">
                 <el-input v-model="adCate.name" autocomplete="off" />
+            </el-form-item> -->
+            <el-form-item label="每消费多少元获取1个点" :label-width="formLabelWidth">
+                <el-input v-model="adCate.consumePerPoint" autocomplete="off" />
             </el-form-item>
-            <el-form-item label="width" :label-width="formLabelWidth">
-                <el-input v-model="adCate.width" autocomplete="off" />
+            <el-form-item label="连续签到天数" :label-width="formLabelWidth">
+                <el-input v-model="adCate.continueSignDay" autocomplete="off" />
             </el-form-item>
-            <el-form-item label="height" :label-width="formLabelWidth">
-                <el-input v-model="adCate.height" autocomplete="off" />
+            <el-form-item label="连续签到赠送数量" :label-width="formLabelWidth">
+                <el-input v-model="adCate.continueSignPoint" autocomplete="off" />
+            </el-form-item>
+            <el-form-item label="最低获取点数的订单金额" :label-width="formLabelWidth">
+                <el-input v-model="adCate.lowOrderAmount" autocomplete="off" />
+            </el-form-item>
+            <el-form-item label="每笔订单最高获取点数" :label-width="formLabelWidth">
+                <el-input v-model="adCate.maxPointPerOrder" autocomplete="off" />
+            </el-form-item>
+            <el-form-item label="类型" :label-width="formLabelWidth">
+                <el-input v-model="adCate.type" autocomplete="off" />
             </el-form-item>
         </el-form>
         <template #footer>
@@ -50,30 +66,53 @@
             </span>
         </template>
     </el-dialog>
+    <!-- 按id查询按钮点击后出现的表单 -->
+    <el-dialog v-model="dialogFormVisibleById" title="ID查询">
+        <el-form :model="adCate">
+            <el-form-item label="请输入ID" :label-width="formLabelWidth">
+                <el-input v-model="searchText" placeholder="请输入ID" autocomplete="off" />
+            </el-form-item>
+        </el-form>
+
+        <template #footer>
+            <span class="dialog-footer">
+                <el-button @click="dialogFormVisibleById = false">Cancel</el-button>
+                <el-button type="primary" @click="getById(searchText)">查询
+                </el-button>
+            </span>
+        </template>
+    </el-dialog>
 </template>
 
 <script>
 import { defineComponent } from "vue"
-import { adCatePage, adCateDelId, adCateAdd, adCateEdit } from "../../http/school.js";
+import { adCatePage, adCateDelId, adCateAdd, adCateEdit, adCateOne } from "../../http/ums_rule.js";
 import { ElMessage } from 'element-plus'
-import {cloneDeep} from 'lodash-es'
+import { cloneDeep, identity } from 'lodash-es'
 export default defineComponent({
     data() {
         return {
+            rules: [],
             adCates: [],
+            searchText: "",
             page: {
                 total: 0,
                 current: 1,
                 size: 10
             },
             dialogFormVisible: false,
+            dialogFormVisibleById: false,
             adCate: {
-                "height": "",
-                "id": 0,//标志点 0添加 >0 更新
-                "name": "",
-                "width": ""
+                "id": 0,
+                "consumePerPoint": 0,
+                "continueSignDay": 0,
+                "continueSignPoint": 0,
+                "lowOrderAmount": 0,
+                "maxPointPerOrder": 0,
+                "type": 0
+                // "isNew": true
             },
-            formLabelWidth: 80
+            formLabelWidth: 180
         }
     },
     mounted() {
@@ -82,13 +121,13 @@ export default defineComponent({
     methods: {
         toEdit(adcate) {
             console.log(adcate);
-            this.dialogFormVisible=true;
-            this.adCate=cloneDeep(adcate);    
+            this.dialogFormVisible = true;
+            this.adCate = cloneDeep(adcate);
         },
         getAdCatesPage(current) {
             const data = {
                 current: current,
-                size: 2
+                size: 5
             }
             adCatePage(data).then(res => {
                 console.log(res);
@@ -133,6 +172,36 @@ export default defineComponent({
         toAdd() {
             //到添加的页面
             this.dialogFormVisible = true;
+            this.adCate = {
+                "consumePerPoint": 0,
+                "continueSignDay": 0,
+                "continueSignPoint": 0,
+                "id": 0,
+                "lowOrderAmount": 0,
+                "maxPointPerOrder": 0,
+                "type": 0
+            }
+        },
+        //one查询
+        selectById() {
+            this.dialogFormVisibleById = true;
+        },
+        //按Id查询
+        getById(id) {
+            this.rules = [];//新建一个数组
+            const params = {
+                id: id
+            }
+            adCateOne(params).then(res => {
+                this.dialogFormVisibleById = false;
+                this.rules.push(res.data.help);
+                const adCates = this.rules;
+                this.adCates = adCates;
+                ElMessage("查询成功！")
+            }).catch(err => {
+                ElMessage("查询失败，请输入有效的id")
+                console.log(err);
+            })
         },
         save() {
             const adcate = this.adCate;
@@ -152,7 +221,7 @@ export default defineComponent({
                     ElMessage('网络错误联系管理员')
                 })
             }
-            else{
+            else {
                 adCateEdit(adcate).then(res => {
                     if (res.success) {
                         //刷新页面
@@ -176,4 +245,14 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+body {
+    margin: 0;
+    padding: 0;
+    background-image: url("@/imgs/keli.png");
+    background-size: cover;
+    opacity: 0.9 !important;
+    /* 使用 !important 提高优先级 */
+    background-repeat: no-repeat;
+}
+</style>
